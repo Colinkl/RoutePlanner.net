@@ -57,6 +57,10 @@ namespace RoutePlanner.net
             }
             foreach (var connection in connections)
             {
+                if (connection.Bidirectional)
+                {
+                    graph.Connect(nodesList[connection.ToRoute], nodesList[connection.From], connection.Cost, connection.Custom);
+                }
                 graph.Connect(nodesList[connection.From], nodesList[connection.ToRoute], connection.Cost, connection.Custom);
             }
             var remainingDest = destinations;
@@ -86,7 +90,12 @@ namespace RoutePlanner.net
                     }
                 }
                 currentLocation = nearestDest;
-                Route.Add(currentLocation);
+                if (minLenght > 999999)
+                {
+                    Route.Add("error");
+                    break;
+                }
+                Route.Add($"{nearestDest}  {minLenght}");
                 remainingDest.Remove(currentLocation);
             }
             return Route;
