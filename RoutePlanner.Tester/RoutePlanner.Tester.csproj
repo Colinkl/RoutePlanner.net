@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RoutePlanner.net.csproj" />
+    <ProjectReference Include="..\RoutePlanner.Lib\RoutePlanner.net.csproj" />
   </ItemGroup>
 
 </Project>

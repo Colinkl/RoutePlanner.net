@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,14 +9,15 @@ using Dijkstra.NET.ShortestPath;
 
 namespace RoutePlanner.net
 {
-    public class Route
+    public class RouteCreator
     {
         private Dictionary<string, uint> nodesList;
 
-        private Graph<string, string> graph;
-        public Route()
+        private Graph<string, string> graph { get; set; }
+        public RouteCreator()
         {
-            var graph = new Graph<string, string>();
+             graph = new Graph<string, string>() + "a";
+            nodesList = new Dictionary<string, uint>();
         }
 
         private List<string> nodes;
@@ -29,12 +31,8 @@ namespace RoutePlanner.net
                 {
                     return;
                 }
-                var delta = value.Except(nodes);
-                foreach (var node in delta)
-                {
-                    var id = graph.AddNode(node);
-                    nodesList.Add(node, id);
-                }
+
+                nodes = value;
             }
         }
 
@@ -44,31 +42,43 @@ namespace RoutePlanner.net
             get => connections;
             set
             {
-                foreach (var connection in value)
-                {
-                    graph.Connect(nodesList[connection.From], nodesList[connection.ToRoute], connection.Cost, connection.Custom);
-                }
+                connections = value;
             }
 
         }
 
         public List<string> GetRoute(string start, List<string> destinations)
-        {
+        {            
+            foreach (var node in nodes)
+            {
+                //graph.AddNode(node);
+                var id = graph.AddNode(node);
+                nodesList.Add(node, id);
+            }
+            foreach (var connection in connections)
+            {
+                graph.Connect(nodesList[connection.From], nodesList[connection.ToRoute], connection.Cost, connection.Custom);
+            }
             var remainingDest = destinations;
-            var currentLocation = start;
-            List<string> Route = null;
+            string currentLocation = start;
+            var Route = new List<string> ();
             if (nodesList == null)
             {
                 return null;
             }
             Route.Add(currentLocation);
-            while (remainingDest != null)
+            while (remainingDest.Count != 0)
             {
                 int minLenght = -1;
-                string nearestDest = null;                
+                string nearestDest = null;
                 foreach (var destination in remainingDest)
                 {
                     ShortestPathResult result = graph.Dijkstra(nodesList[currentLocation], nodesList[destination]);
+                    if (minLenght == -1)
+                    {
+                        minLenght = result.Distance;
+                        nearestDest = destination;
+                    }
                     if (minLenght > result.Distance)
                     {
                         minLenght = result.Distance;
