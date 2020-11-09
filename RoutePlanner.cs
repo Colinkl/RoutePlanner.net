@@ -8,12 +8,12 @@ using Dijkstra.NET.ShortestPath;
 
 namespace RoutePlanner.net
 {
-    public class RoutePlanner
+    public class Route
     {
         private Dictionary<string, uint> nodesList;
 
         private Graph<string, string> graph;
-        public RoutePlanner()
+        public Route()
         {
             var graph = new Graph<string, string>();
         }
