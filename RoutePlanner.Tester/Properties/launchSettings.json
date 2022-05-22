@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RoutePlanner.Tester": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
